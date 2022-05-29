@@ -1,25 +1,28 @@
-import React from "react"
-import { Navigate, Outlet, Route, useRoutes } from "react-router-dom";
+import React, { useContext } from "react"
+import {  useRoutes } from "react-router-dom";
+import { authContext } from "../context/authContext";
 
-const Login = React.lazy(() => import('../views/Login'))
+const Login = React.lazy(() => import('../views/login/Login'));
+const Dashboard = React.lazy(() => import('../views/dashboard/Dashboard'))
 
-  let publicRoutes = [
-    {path:"/", element:<h1>Public Route home</h1>},
-    {path:"/login", element:<Login />}
-  ]
-  let adminRoutes = [
-    {path:"/admin", element:<h1>Public Route home</h1>},
-  ]
-  let userRoutes = [
-    {path:"/admin", element:<h1>Public Route home</h1>},
-  ]
+let publicRoutes = {}
+let adminRoutes = [
+  {path:"/dashboard", element: <Dashboard />},
+  {path:"/perfil", element:<h1>perfil</h1>},
+]
+let userRoutes = [
+  {path:"/dashboard", element: <Dashboard />},
+  {path:"/perfil", element:<h1>perfil</h1>},
+]
  /*  let ProtectedRoutes = useRoutes([
     {path: 'dashboard', element:<h1>Dashboard Page</h1>},
     {path: 'profile', element:<h1>Profile Page</h1>}
   ]) */
 
-  function renderSwitch(user) {
-    switch (user.role) {
+  const localStorageValidation = (localStorage.length > 0) ? JSON.parse(localStorage.getItem("user")) : null;
+  
+  function renderSwitch(role) {
+    switch (role) {
       case "user":
         return userRoutes;
       case "admin":
@@ -29,6 +32,17 @@ const Login = React.lazy(() => import('../views/Login'))
     }
   }
   
-  const conditional = renderSwitch(JSON.parse(window.localStorage.getItem("user")));
 
-export default conditional;
+  const conditional = renderSwitch(localStorageValidation !== null ? localStorageValidation.user.role : null);
+
+
+export  function  PrivateRoutes() {
+  const { user } = useContext(authContext)
+  debugger
+  let ruta = useRoutes(conditional)
+  return ruta
+}
+export  function  PublicRoutes() {
+  let ruta = useRoutes(conditional)
+  return ruta
+}
