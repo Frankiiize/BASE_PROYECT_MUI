@@ -1,48 +1,44 @@
-import React, { useContext } from "react"
-import {  useRoutes } from "react-router-dom";
-import { authContext } from "../context/authContext";
+import React from "react";
+import { useRoutes } from "react-router-dom";
 
 const Login = React.lazy(() => import('../views/login/Login'));
-const Dashboard = React.lazy(() => import('../views/dashboard/Dashboard'))
+const Dashboard = React.lazy(() => import('../views/dashboard/Dashboard'));
+const Protected = React.lazy(() => import('../routers/ProtectedRoute'));
 
-let publicRoutes = {}
+const localStorageValidation = (localStorage.length > 0) ? JSON.parse(localStorage.getItem("user")).user.role : null;
+
 let adminRoutes = [
-  {path:"/dashboard", element: <Dashboard />},
-  {path:"/perfil", element:<h1>perfil</h1>},
-]
-let userRoutes = [
-  {path:"/dashboard", element: <Dashboard />},
-  {path:"/perfil", element:<h1>perfil</h1>},
-]
- /*  let ProtectedRoutes = useRoutes([
-    {path: 'dashboard', element:<h1>Dashboard Page</h1>},
-    {path: 'profile', element:<h1>Profile Page</h1>}
-  ]) */
+  {path:"dashboard", element: <h1>index page admin</h1>},
+  {path:"admin", element:  <h1>index page admin2</h1>},
+  {path:'*',element: <h1>not found</h1>}
+];
+let rutasUsuario = [
+  {path:"dashboard", element: <Dashboard />},
+  {path:"perfil", element:<h1>perfil</h1>},
+  {path:'*',element: <h1>not found</h1>}
+];
+let routes = [
+  {path:"/", element: <h1>index page</h1>},
+  {path:"/login", element: <Login />},
+  {
+    path:"/", 
+    element: <Protected />, 
+    children: renderSwitch(localStorageValidation)
+  },
+  {path:'*',element: <h1>not found</h1>}
+];
+function renderSwitch(role) {
+  switch (role) {
+    case "user":
+      return rutasUsuario;
+    case "admin":
+      return adminRoutes;
+    default:
+      return [{path:"*", element: <Protected />}];
+  };
+};
 
-  const localStorageValidation = (localStorage.length > 0) ? JSON.parse(localStorage.getItem("user")) : null;
-  
-  function renderSwitch(role) {
-    switch (role) {
-      case "user":
-        return userRoutes;
-      case "admin":
-        return adminRoutes;
-      default:
-        return publicRoutes
-    }
-  }
-  
-
-  const conditional = renderSwitch(localStorageValidation !== null ? localStorageValidation.user.role : null);
-
-
-export  function  PrivateRoutes() {
-  const { user } = useContext(authContext)
-  debugger
-  let ruta = useRoutes(conditional)
-  return ruta
-}
-export  function  PublicRoutes() {
-  let ruta = useRoutes(conditional)
-  return ruta
-}
+export  function  Router() {
+  let ruta = useRoutes(routes);
+  return ruta;
+};

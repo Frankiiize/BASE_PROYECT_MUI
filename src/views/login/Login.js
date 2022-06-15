@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import { useLogin } from "../../hooks/useLogin";
 import { authContext } from "../../context/authContext";
 import { login } from "../../services/login";
+import { Navigate } from "react-router-dom";
 
 
 const Login = () => {
@@ -44,6 +45,9 @@ const Login = () => {
     onSubmit: onSubmit,
   });
   const handleTextChange = handlerInputChangeCreator(formik)
+  
+  if(user.logged ){ return <Navigate to='/'/>
+}
   return(
     <form onSubmit={formik.handleSubmit}>
       <label>Correo</label>

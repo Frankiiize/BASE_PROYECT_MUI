@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import { Navigate, Outlet, Route } from "react-router-dom";
+import { Navigate, Outlet, Route, useLocation, useOutlet } from "react-router-dom";
 import { authContext } from "../context/authContext";
 
 
-export const ProtectedRoute = (props) => {
+const ProtectedRoute = () => {
   const { user } = useContext(authContext);
-  debugger
+  const location = useOutlet();
   return (
     !!user.logged 
       ? <>
@@ -14,3 +14,5 @@ export const ProtectedRoute = (props) => {
       : <Navigate to="/login" />
   );
 };
+
+export default ProtectedRoute;

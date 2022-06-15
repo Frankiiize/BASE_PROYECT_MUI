@@ -5,7 +5,7 @@ const Dashboard = () => {
   const {user} = useContext(authContext);
   console.log({user})
   return ( 
-    <h1>asd</h1>
+    <h1>dashboard</h1>
   );
 };
 
