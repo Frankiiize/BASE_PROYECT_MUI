@@ -3,7 +3,6 @@ import { useFormik } from "formik";
 import { validate, handlerInputChangeCreator, handleTextChange } from '../../utils/utils'
 import { registerSchema } from './schema'
 import { Button } from "@mui/material";
-import { useLogin } from "../../hooks/useLogin";
 import { authContext } from "../../context/authContext";
 import { login } from "../../services/login";
 import { Navigate } from "react-router-dom";
@@ -29,6 +28,7 @@ const Login = () => {
     }else{
       login({email:formik.values.email, password: formik.values.password})
         .then((res) => {
+          debugger
             console.log(res.data.result.access_token, res.data.result.user);
           handleLogin(res.data.result.access_token, res.data.result.user)
         })

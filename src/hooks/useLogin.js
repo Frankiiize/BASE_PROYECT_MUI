@@ -30,7 +30,6 @@ const useLogin = () => {
     dispatch({type: 'login', payload: JSON.parse(localStorage.getItem('user'))})
   }
   const handleLogin = (token, user) =>{  
-    debugger
     dispatch({type: 'login' , payload:{user, token: token}})
     localStorage.setItem('user', JSON.stringify({user, token: token}))
   }
